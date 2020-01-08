@@ -184,11 +184,14 @@ class Apptha_Outofstocknotification_Model_Observer extends Mage_Core_Model_Abstr
             $emailTemplate = Mage::getModel('core/email_template')
                     ->loadDefault('outofstock_email_template');
         }
-		$storeName = Mage::app()->getStore()->getName();
+		$storeName = Mage::app()->getStore()->getFrontendName(); //Mage::app()->getStore()->getName();
 
         $emailTemplate->setSenderName($senderName);     //mail sender name
         $emailTemplate->setSenderEmail($senderMailId);  //mail sender email id
-        $emailTemplate->setTemplateSubject('Out of stock Notification from ' . $storeName);
+        
+		$subject = __('Out of stock Notification from');
+		$emailTemplate->setTemplateSubject($subject . ' ' . $storeName);
+		
         $emailTemplate->setDesignConfig(array('area' => 'frontend'));
         $processedTemplate = $emailTemplate->getProcessedTemplate($emailTemplateVariables); //it return the temp body
 	   
@@ -285,7 +288,7 @@ class Apptha_Outofstocknotification_Model_Observer extends Mage_Core_Model_Abstr
                                 ->loadDefault('Outofstocknotification_general_outofstock_admin_template');
                     }
 
-                    $emailTemplateVariables['storeName'] = Mage::getStoreConfig("general/store_information/name");
+                    $emailTemplateVariables['storeName'] = Mage::app()->getStore()->getFrontendName(); //Mage::getStoreConfig("general/store_information/name");
                     $emailTemplateVariables['siteLink'] = Mage::getBaseUrl();
 
                     $toMailId = $senderMailId;
@@ -294,7 +297,10 @@ class Apptha_Outofstocknotification_Model_Observer extends Mage_Core_Model_Abstr
 
                     $emailTemplate->setSenderName($senderName);     //mail sender name
                     $emailTemplate->setSenderEmail($senderMailId);  //mail sender email id
-                    $emailTemplate->setTemplateSubject('Out of stock Notification from ' . $emailTemplateVariables['storeName']);
+					
+					$subject = __('Out of stock Notification from');
+                    $emailTemplate->setTemplateSubject($subject.' ' . $emailTemplateVariables['storeName']);
+					
                     $emailTemplate->setDesignConfig(array('area' => 'frontend'));
                     $processedTemplate = $emailTemplate->getProcessedTemplate($emailTemplateVariables); //it return the temp body
 					
